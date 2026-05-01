@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 var pipe = Pipe()
 var sema = DispatchSemaphore(value: 0)
@@ -14,6 +15,8 @@ var weOnADebugBuild: Bool = false
 @main
 struct MuffinStoreJailedApp: App {
     @StateObject private var appData = AppData.shared
+    
+    @AppStorage("autoCleanApp") var autoCleanApp: Bool = true
     
     init() {
         // Setup log stuff (redirect stdout)
@@ -30,6 +33,19 @@ struct MuffinStoreJailedApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(appData)
+                .onAppear {
+                    if autoCleanApp {
+                        cleanUp()
+                    }
+                }
+                // receive the incoming url
+                .onOpenURL { schemedURL in
+                    let rawURL = schemedURL.absoluteString.replacingOccurrences(of: "pancakestore:", with: "")
+                    if let appLink = rawURL.removingPercentEncoding {
+                        appData.appLink = appLink
+                        print("Successfully received app link! \(appLink)")
+                    }
+                }
         }
     }
 }

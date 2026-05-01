@@ -8,6 +8,7 @@
 import SwiftUI
 import PartyUI
 
+/*
 struct DowngradeAppView: View {
     @EnvironmentObject var appData: AppData
     
@@ -29,3 +30,4 @@ struct DowngradeAppView: View {
         }
     }
 }
+*/

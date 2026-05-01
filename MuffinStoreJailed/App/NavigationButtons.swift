@@ -8,7 +8,7 @@
 import SwiftUI
 import PartyUI
 
-struct BottomBar: View {
+struct NavigationButtons: View {
     @EnvironmentObject var appData: AppData
     
     var body: some View {
@@ -24,7 +24,7 @@ struct BottomBar: View {
                             if appData.code.isEmpty {
                                 appData.ipaTool = IPATool(appleId: appData.appleId, password: appData.password)
                                 appData.ipaTool?.authenticate(requestCode: true)
-                                appData.hasSent2FACode = true
+                                //appData.hasSent2FACode = true
                                 return
                             }
                             let finalPassword = appData.password + appData.code
@@ -35,7 +35,7 @@ struct BottomBar: View {
                             if appData.isAuthenticated {
                                 appData.applicationStatus = "Ready to Downgrade!"
                                 appData.applicationIcon = "checkmark.circle.fill"
-                                appData.applicationIconColor = .primary
+                                appData.applicationIconColor = .secondary
                             }
                         }
                     }
@@ -46,7 +46,9 @@ struct BottomBar: View {
                         ButtonLabel(text: "Send 2FA Code", icon: "key")
                     }
                 }
-                .buttonStyle(GlassyButtonStyle(isDisabled: appData.hasSent2FACode ? appData.code.isEmpty : false, isMaterialButton: true))
+                .buttonStyle(FancyButtonStyle())
+                .disabled(appData.appleId.isEmpty || appData.password.isEmpty)
+                .disabled(appData.hasSent2FACode ? appData.code.isEmpty : false)
             } else {
                 if appData.isDowngrading {
                     Button(action: {
@@ -57,7 +59,9 @@ struct BottomBar: View {
                     }) {
                         ButtonLabel(text: "Open App", icon: "arrow.up.forward.app")
                     }
-                    .buttonStyle(GlassyButtonStyle(isDisabled: !appData.hasAppBeenServed, isMaterialButton: true))
+                    .buttonStyle(FancyButtonStyle(color: .blue))
+                    .disabled(!appData.hasAppBeenServed)
+                    
                     Button(action: {
                         Haptic.shared.play(.heavy)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
@@ -66,7 +70,8 @@ struct BottomBar: View {
                     }) {
                         ButtonLabel(text: "Go to Home Screen", icon: "house")
                     }
-                    .buttonStyle(GlassyButtonStyle(isDisabled: !appData.hasAppBeenServed, color: .blue, isMaterialButton: true))
+                    .buttonStyle(FancyButtonStyle())
+                    .disabled(!appData.hasAppBeenServed)
                 } else {
                     Button(action: {
                         Haptic.shared.play(.soft)
@@ -91,8 +96,10 @@ struct BottomBar: View {
                     }) {
                         ButtonLabel(text: "Downgrade App", icon: "arrow.down")
                     }
-                    .buttonStyle(GlassyButtonStyle(isMaterialButton: true))
+                    .buttonStyle(FancyButtonStyle())
+                    .disabled(appData.appLink.isEmpty)
                     
+                    /*
                     Button(action: {
                         Haptic.shared.play(.heavy)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
@@ -105,7 +112,8 @@ struct BottomBar: View {
                     }) {
                         ButtonLabel(text: "Log Out & Exit", icon: "xmark")
                     }
-                    .buttonStyle(GlassyButtonStyle(color: .red, isMaterialButton: true))
+                    .buttonStyle(FancyButtonStyle(color: .red))
+                     */
                 }
             }
         }

@@ -11,6 +11,7 @@ import Telegraph
 import Zip
 import SwiftUI
 import SafariServices
+import PartyUI
 
 struct SafariWebView: UIViewControllerRepresentable {
     let url: URL
@@ -32,6 +33,7 @@ func downgradeAppToVersion(appId: String, versionId: String, ipaTool: IPATool) {
     let tempDir = FileManager.default.temporaryDirectory
     var contents = try! FileManager.default.contentsOfDirectory(atPath: path)
     print("Contents: \(contents)")
+    // also delete this; i wanna see both the app's directory and the temp ipa GONE.
     let destinationUrl = tempDir.appendingPathComponent("app.ipa")
     try! Zip.zipFiles(paths: contents.map { URL(fileURLWithPath: path).appendingPathComponent($0) }, zipFilePath: destinationUrl, password: nil, progress: nil)
     print("IPA zipped to \(destinationUrl)")
@@ -40,6 +42,7 @@ func downgradeAppToVersion(appId: String, versionId: String, ipaTool: IPATool) {
     for file in try! FileManager.default.contentsOfDirectory(atPath: appDir.path) {
         if file.hasSuffix(".app") {
             print("Found app: \(file)")
+            // i assume we delete this? idk how to though
             appDir = appDir.appendingPathComponent(file)
             break
         }
@@ -69,7 +72,7 @@ func downgradeAppToVersion(appId: String, versionId: String, ipaTool: IPATool) {
         server.route(.GET, "install", { _ in
             print("Serving install page")
             appData.hasAppBeenServed = true
-            appData.applicationStatus = "Downgraded \(appBundleId) successfully!"
+            appData.applicationStatus = "Downgrade successful!"
             appData.applicationIcon = "checkmark.circle.fill"
             appData.applicationIconColor = .green
             let installPage = """
@@ -85,15 +88,21 @@ func downgradeAppToVersion(appId: String, versionId: String, ipaTool: IPATool) {
         
         DispatchQueue.main.async {
             print("Requesting app install")
+            
+            // having it built-in no matter the version sounds more enjoyable, if you're already taking all the damn effort to do this bullshit then why not have this pop up on 17.x too?
+            let safariView = SafariWebView(url: URL(string: "http://127.0.0.1:9090/install")!)
+            UIApplication.shared.windows.first?.rootViewController?.present(UIHostingController(rootView: safariView), animated: true, completion: nil)
+            /*
             let majoriOSVersion = Int(UIDevice.current.systemVersion.components(separatedBy: ".").first!)!
             if majoriOSVersion >= 18 {
                 // iOS 18+ ( idk why this is needed but it seems to fix it for some people )
                 let safariView = SafariWebView(url: URL(string: "http://127.0.0.1:9090/install")!)
-                UIApplication.shared.windows.first?.rootViewController?.present(UIHostingController(rootView: safariView), animated: true, completion: nil)
+                UIApplication.shared.windows.first?.rootViewController?.present(UIHostingController(rootView: safariView), animated: true, completion: { cleanUp() })
             } else {
                 // iOS 17-
                 UIApplication.shared.open(URL(string: installURL)!)
             }
+             */
         }
         
         while server.isRunning {
@@ -156,8 +165,21 @@ func getAllAppVersionIdsFromServer(appId: String, ipaTool: IPATool) {
 }
 
 func downgradeApp(appId: String, ipaTool: IPATool) {
+    @ObservedObject var appData = AppData.shared
+    
     let versionIds = ipaTool.getVersionIDList(appId: appId)
-    var selectedVersion = ""
+    if versionIds.isEmpty {
+        print("No version ids were found, aborting...")
+        DispatchQueue.main.async {
+            Alertinator.shared.alert(title: "Failed to downgrade app!", body: "Failed to get available version ids. This may be because the app has not been purchased yet, or there are no versions available to downgrade to.")
+            appData.isDowngrading = false
+            appData.appLink = ""
+            appData.applicationStatus = "Ready to Downgrade!"
+            appData.applicationIcon = "checkmark.circle.fill"
+        }
+        return
+    }
+    
     let isiPad = UIDevice.current.userInterfaceIdiom == .pad
     
     let alert = UIAlertController(title: "Version ID", message: "Do you want to enter the version ID manually or request the list of version IDs from the server?", preferredStyle: isiPad ? .alert : .actionSheet)
@@ -169,4 +191,21 @@ func downgradeApp(appId: String, ipaTool: IPATool) {
     }))
     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
     UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
+}
+
+func cleanUp() {
+    do {
+        // first, delete the temporary ipa file.
+        let tempDir = FileManager.default.temporaryDirectory
+        let tempIPA = tempDir.appendingPathComponent("app.ipa")
+        
+        try FileManager.default.removeItem(at: tempIPA)
+        // then, nuke the app directory.
+        let docsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let appFolder = docsURL.appendingPathComponent("app")
+        
+        try FileManager.default.removeItem(at: appFolder)
+    } catch {
+        
+    }
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 import PartyUI
 
+/*
 struct LoginView: View {
     @EnvironmentObject var appData: AppData
     
@@ -43,3 +44,4 @@ struct LoginView: View {
         }
     }
 }
+*/

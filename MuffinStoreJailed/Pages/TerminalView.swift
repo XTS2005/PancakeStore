@@ -8,6 +8,7 @@
 import SwiftUI
 import PartyUI
 
+/*
 struct TerminalView: View {
     @EnvironmentObject var appData: AppData
     
@@ -23,6 +24,6 @@ struct TerminalView: View {
             Text(appData.applicationStatus)
                 .fontWeight(.semibold)
         }
-        TerminalContainer(content: LogView())
     }
 }
+*/
