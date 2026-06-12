@@ -119,8 +119,13 @@ class StoreClient {
     // pancakestore is saved! thanks ipatool!
     // admittedly i kinda owe this hoorah to that vibecoded ass pull-request, i had to stoop to its level too :(
     // oh well. - skadz, 2.24.26
+    
+    // if i had a nickel for every time this app has been broken by random apple backend changes
+    // and i've had to copy some AI-slopped pull request fix from ipatool to fix it
+    // i'd have two nickels.
+    // see you all on round three. - Skadz, 6.11.26
     func getBagEndpoint() async -> String {
-        let fallback = "https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/authenticate" // this is the old broken one, i'm just gonna have it as a fallback in case this amazingness somehow fails one day
+        let fallback = "https://auth.itunes.apple.com/auth/v1/native/"
         
         if guid == nil {
             guid = generateGuid(appleId: appleId)
@@ -134,7 +139,7 @@ class StoreClient {
 
         do {
             let (data, _) = try await URLSession.shared.data(for: request)
-            guard !data.isEmpty else { return fallback }
+            guard !data.isEmpty else { print("no data for bag.xml, returning fallback value..."); return fallback }
 
             // i'm sorry i'm sorry please don't hit me i know i know
             if let xmlString = String(data: data, encoding: .utf8),
@@ -153,6 +158,7 @@ class StoreClient {
             print("failed to get bag endpoint!! \(error)")
         }
 
+        print("failed to get bag, returning fallback value...")
         return fallback
     }
 
@@ -173,7 +179,7 @@ class StoreClient {
         Task {
             let authURL = await getBagEndpoint()
             
-            let url = URL(string: authURL)!
+            let url = URL(string: authURL)!.appendingPathComponent("fast/")
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             request.allHTTPHeaderFields = [
@@ -194,10 +200,9 @@ class StoreClient {
                     }
                     if let response = response {
                         if let response = response as? HTTPURLResponse {
+                            print("Status: \(response.statusCode)")
                             print("New URL: \(response.url!)")
                             request.url = response.url
-                            
-//                            print(response.allHeaderFields)
                             
                             if let pod = response.value(forHTTPHeaderField: "pod") {
                                 print("pod gotten: \(pod)")
@@ -242,9 +247,9 @@ class StoreClient {
                     }
                 }
                 datatask.resume()
-                while datatask.state != .completed {
-                    sleep(1)
-                }
+//                while datatask.state != .completed {
+//                    sleep(1)
+//                }
                 if ret {
                     break
                 }
