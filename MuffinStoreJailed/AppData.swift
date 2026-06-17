@@ -12,7 +12,7 @@ final class AppData: ObservableObject {
     
     @Published var applicationIcon: String = "xmark.circle.fill"
     @Published var applicationIconColor: Color = .secondary
-    @Published var applicationStatus: String = "Not logged in!"
+    @Published var applicationStatus: String = "未登录！"
     
     @Published var appBundleID: String = ""
     @Published var appVersion: String = ""

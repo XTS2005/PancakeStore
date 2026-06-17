@@ -60,7 +60,7 @@ struct ContentView: View {
                                     let tempIPAURL = tempDir.appendingPathComponent("app.ipa")
                                     presentShareSheet(with: tempIPAURL)
                                 }) {
-                                    Label("Export IPA", systemImage: "arrow.up.doc")
+                                    Label("导出IPA", systemImage: "arrow.up.doc")
                                 }
                                 .disabled(!appData.hasAppBeenServed)
                                 Button(action: {
@@ -72,7 +72,7 @@ struct ContentView: View {
                                         exitinator()
                                     }
                                 }) {
-                                    ButtonLabel(text: "Log Out", icon: "arrow.right")
+                                    ButtonLabel(text: "登出", icon: "arrow.right")
                                 }
                                 .disabled(!appData.isAuthenticated)
                             } label : { Image(systemName: "line.horizontal.3") }
@@ -99,7 +99,7 @@ struct ContentView: View {
             appData.isAuthenticated = EncryptedKeychainWrapper.hasAuthInfo()
             print("Found \(appData.isAuthenticated ? "auth" : "no auth") info in keychain")
             if appData.isAuthenticated {
-                appData.applicationStatus = "Ready to Downgrade!"
+                appData.applicationStatus = "准备降级！"
                 appData.applicationIcon = "checkmark.circle.fill"
                 appData.applicationIconColor = .primary
                 guard let authInfo = EncryptedKeychainWrapper.getAuthInfo() else {
@@ -122,7 +122,7 @@ struct ContentView: View {
     }
     
     private var LogsSection: some View {
-        Section(header: HeaderLabel(text: "Logs", icon: "terminal"), footer: Text("Originally created by [mineek](https://github.com/mineek) with QoL improvements and backend fixes made by [jailbreak.party](https://github.com/jailbreakdotparty).")) {
+        Section(header: HeaderLabel(text: "日志", icon: "terminal"), footer: Text("最初由 [mineek](https://github.com/mineek) 创建，[jailbreak.party](https://github.com/jailbreakdotparty) 进行了体验优化与后端修复。")) {
             VStack {
                 TerminalHeader(text: appData.applicationStatus, icon: appData.applicationIcon, color: appData.applicationIconColor)
                 LogView()
@@ -133,7 +133,7 @@ struct ContentView: View {
     
     private var LoginSection: some View {
         Group {
-            Section(header: HeaderLabel(text: "Login", icon: "icloud"), footer: Text("")) {
+            Section(header: HeaderLabel(text: "登录", icon: "icloud"), footer: Text("")) {
                 VStack {
                     TextField("Apple ID", text: $appData.appleId)
                         .modifier(TextFieldBackground())
@@ -143,13 +143,13 @@ struct ContentView: View {
                     
                     HStack {
                         if appData.showPassword {
-                            TextField("Password", text: $appData.password)
+                            TextField("密码", text: $appData.password)
                                 .modifier(TextFieldBackground())
                                 .disabled(appData.hasSent2FACode)
                                 .autocorrectionDisabled()
                                 .textInputAutocapitalization(.never)
                         } else {
-                            SecureField("Password", text: $appData.password)
+                            SecureField("密码", text: $appData.password)
                                 .modifier(TextFieldBackground())
                                 .disabled(appData.hasSent2FACode)
                                 .autocorrectionDisabled()
@@ -168,8 +168,8 @@ struct ContentView: View {
             }
             
             if appData.hasSent2FACode {
-                Section(header: HeaderLabel(text: "Verification Code", icon: "key")) {
-                    TextField("2FA Code", text: $appData.code)
+                Section(header: HeaderLabel(text: "验证码", icon: "key")) {
+                    TextField("双重认证", text: $appData.code)
                         .modifier(TextFieldBackground())
                         .keyboardType(.numberPad)
                 }
@@ -178,9 +178,9 @@ struct ContentView: View {
     }
     
     private var InputAppSection: some View {
-        Section(header: HeaderLabel(text: "Downgrade App", icon: "arrow.down.app"), footer: Text("To downgrade an app, it must have been purchased on your account at some point in the past (when the app has a cloud icon next to it). It must also not be installed on your device currently, but you can offload it.")) {
+        Section(header: HeaderLabel(text: "降级应用", icon: "arrow.down.app"), footer: Text("要降级应用，该应用必须曾在你账户中购买过（当应用旁边有云朵图标时）。该应用当前也不能安装在你的设备上，但你可以将其卸载。")) {
             VStack {
-                TextField("Link to App Store App", text: $appData.appLink)
+                TextField("App Store应用链接", text: $appData.appLink)
                     .modifier(TextFieldBackground())
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.never)
@@ -189,10 +189,10 @@ struct ContentView: View {
     }
     
     private var AppInfoSection: some View {
-        Section(header: HeaderLabel(text: "App Info", icon: "info.circle")) {
-            ItemInfoCell(label: "App Link", icon: "link", text: appData.appLink)
-            ItemInfoCell(label: "App Bundle ID", icon: "shippingbox", text: appData.appBundleID)
-            ItemInfoCell(label: "Target App Version", icon: "arrow.down.app", text: appData.appVersion)
+        Section(header: HeaderLabel(text: "应用信息", icon: "info.circle")) {
+            ItemInfoCell(label: "应用链接", icon: "link", text: appData.appLink)
+            ItemInfoCell(label: "应用包名 ID", icon: "shippingbox", text: appData.appBundleID)
+            ItemInfoCell(label: "目标应用版本", icon: "arrow.down.app", text: appData.appVersion)
         }
     }
 }
@@ -220,7 +220,7 @@ struct ItemInfoCell: View {
             Button(action: {
                 UIPasteboard.general.string = text
             }) {
-                Label("Copy Value", systemImage: "character.cursor.ibeam")
+                Label("复制值", systemImage: "character.cursor.ibeam")
             }
         }
     }
