@@ -195,10 +195,10 @@
 				};
 			};
 			buildConfigurationList = 6FA2A8E32D24268F005CF73D /* Build configuration list for PBXProject "PancakeStore" */;
-			developmentRegion = en;
+			developmentRegion = zh-Hans;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
+				zh-Hans,
 				Base,
 			);
 			mainGroup = 6FA2A8DF2D24268F005CF73D;
