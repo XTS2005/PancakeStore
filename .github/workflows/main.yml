@@ -7,9 +7,14 @@ on:
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
+      
+      - name: Setup latest Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest
       
       - name: Make script executable
         run: chmod +x ipabuild.sh
@@ -21,4 +26,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: PancakeStore
-          path: PancakeStore.ipa  # 改成脚本实际生成的文件名
+          path: PancakeStore.ipa
