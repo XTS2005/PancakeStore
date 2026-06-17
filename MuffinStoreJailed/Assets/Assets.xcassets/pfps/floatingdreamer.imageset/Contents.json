@@ -2,7 +2,8 @@
   "images" : [
     {
       "filename" : "floatingdreamer.jpeg",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "scale" : "2x"
     }
   ],
   "info" : {
