@@ -29,7 +29,6 @@ xcodebuild -project "$WORKING_LOCATION/$APPLICATION_NAME.xcodeproj" \
     -configuration Debug \
     -derivedDataPath "$WORKING_LOCATION/build/DerivedDataApp" \
     -destination 'generic/platform=iOS' \
-    -arch arm64 \
     clean build \
     CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO"
 
@@ -42,7 +41,6 @@ xcodebuild -project "$WORKING_LOCATION/$APPLICATION_NAME.xcodeproj" \
     -configuration Release \
     -derivedDataPath "$WORKING_LOCATION/build/DerivedDataApp" \
     -destination 'generic/platform=iOS' \
-    -arch arm64 \
     clean build \
     CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO"
 
@@ -58,12 +56,6 @@ if [ -e "$TARGET_APP/_CodeSignature" ]; then
 fi
 if [ -e "$TARGET_APP/embedded.mobileprovision" ]; then
     rm -rf "$TARGET_APP/embedded.mobileprovision"
-fi
-
-# 再次确保只保留 arm64
-echo "[*] Optimizing binary..."
-if [ -f "$TARGET_APP/$APPLICATION_NAME" ]; then
-    lipo "$TARGET_APP/$APPLICATION_NAME" -thin arm64 -output "$TARGET_APP/$APPLICATION_NAME" 2>/dev/null || true
 fi
 
 echo "[*] Packaging..."
