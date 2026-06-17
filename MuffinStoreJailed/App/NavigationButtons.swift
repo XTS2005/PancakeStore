@@ -19,7 +19,7 @@ struct NavigationButtons: View {
                     Haptic.shared.play(.soft)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                         if appData.appleId.isEmpty || appData.password.isEmpty {
-                            Alertinator.shared.alert(title: "No Apple ID details were input!", body: "Please type both your Apple ID email address & password, then try again.")
+                            Alertinator.shared.alert(title: "未输入Apple ID信息！", body: "请同时输入您的Apple ID邮箱和密码，然后重试。")
                         } else {
                             if appData.code.isEmpty {
                                 appData.ipaTool = IPATool(appleId: appData.appleId, password: appData.password)
@@ -33,7 +33,7 @@ struct NavigationButtons: View {
                             appData.isAuthenticated = ret ?? false
                             
                             if appData.isAuthenticated {
-                                appData.applicationStatus = "Ready to Downgrade!"
+                                appData.applicationStatus = "准备降级！"
                                 appData.applicationIcon = "checkmark.circle.fill"
                                 appData.applicationIconColor = .secondary
                             }
@@ -41,9 +41,9 @@ struct NavigationButtons: View {
                     }
                 }) {
                     if appData.hasSent2FACode {
-                        ButtonLabel(text: "Log In", icon: "arrow.right")
+                        ButtonLabel(text: "登录", icon: "arrow.right")
                     } else {
-                        ButtonLabel(text: "Send 2FA Code", icon: "key")
+                        ButtonLabel(text: "发送验证码", icon: "key")
                     }
                 }
                 .buttonStyle(FancyButtonStyle())
@@ -57,7 +57,7 @@ struct NavigationButtons: View {
                             LSApplicationWorkspace.default().openApplication(withBundleID: "com.jbdotparty.PancakeStore2")
                         }
                     }) {
-                        ButtonLabel(text: "Open App", icon: "arrow.up.forward.app")
+                        ButtonLabel(text: "打开应用", icon: "arrow.up.forward.app")
                     }
                     .buttonStyle(FancyButtonStyle(color: .blue))
                     .disabled(!appData.hasAppBeenServed)
@@ -68,7 +68,7 @@ struct NavigationButtons: View {
                             exitinator()
                         }
                     }) {
-                        ButtonLabel(text: "Go to Home Screen", icon: "house")
+                        ButtonLabel(text: "回到主屏幕", icon: "house")
                     }
                     .buttonStyle(FancyButtonStyle())
                     .disabled(!appData.hasAppBeenServed)
@@ -90,11 +90,11 @@ struct NavigationButtons: View {
                             print("App ID: \(appLinkParsed)")
                             appData.isDowngrading = true
                             downgradeApp(appId: appLinkParsed, ipaTool: appData.ipaTool!)
-                            appData.applicationStatus = "Downgrading Application..."
+                            appData.applicationStatus = "正在降级应用..."
                             appData.applicationIcon = "showMeProgressPlease"
                         }
                     }) {
-                        ButtonLabel(text: "Downgrade App", icon: "arrow.down")
+                        ButtonLabel(text: "降级应用", icon: "arrow.down")
                     }
                     .buttonStyle(FancyButtonStyle())
                     .disabled(appData.appLink.isEmpty)

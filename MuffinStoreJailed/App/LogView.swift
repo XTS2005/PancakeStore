@@ -32,7 +32,7 @@ struct LogView: View {
                     Button {
                         UIPasteboard.general.string = log
                     } label: {
-                        Label("Copy Output", systemImage: "doc.on.doc")
+                        Label("复制输出", systemImage: "doc.on.doc")
                     }
                 }
             }
