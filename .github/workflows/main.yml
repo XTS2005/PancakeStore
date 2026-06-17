@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-26
+    runs-on: macos-latest
 
     steps:
       - name: checkout
@@ -21,75 +21,30 @@ jobs:
         with:
           xcode-version: latest-stable
 
-      - name: show xcode version
-        run: xcodebuild -version
-
       - name: install ldid
         run: brew install ldid
 
       - name: build
         run: |
           chmod +x ipabuild.sh
-          # 修改脚本，在 xcodebuild 命令中插入 -arch arm64
-          sed -i '' 's/xcodebuild -project/xcodebuild -arch arm64 -project/g' ipabuild.sh
           ./ipabuild.sh
 
-      - name: 列出生成的文件
-        run: ls -la *.ipa || echo "No IPA files found"
-
-      - name: upload artifact (PR only)
-        if: github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
-        with:
-          name: lara-ipa
-          path: |
-            PancakeStore.ipa
-            PancakeStore.debug.ipa
-
       - name: upload release ipa
-        if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: release-ipa
           path: PancakeStore.ipa
 
   release:
-    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
       - name: download ipa
         uses: actions/download-artifact@v4
         with:
           name: release-ipa
           path: ./
-
-      - name: get last 12h commits
-        run: |
-          COMMITS=$(git log --since="12 hours ago" --pretty=format:"- %h %s (%an)")
-          if [ -z "$COMMITS" ]; then
-            COMMITS="no commits in the last 12 hours"
-          fi
-
-          echo "COMMITS<<EOF" >> $GITHUB_ENV
-          echo "$COMMITS" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-      - name: write release notes
-        run: |
-          cat <<EOF > release_notes.txt
-          lara nightly build
-          
-          Last 12 hours commits:
-          
-          ${COMMITS}
-          EOF
 
       - name: update nightly release
         env:
@@ -99,11 +54,6 @@ jobs:
           gh release create nightly \
             --title "Nightly" \
             --notes "initial nightly" \
-            --prerelease
-      
-          gh release edit nightly \
-            --title "Nightly" \
-            --notes-file release_notes.txt \
             --prerelease
       
           gh release upload nightly PancakeStore.ipa --clobber
