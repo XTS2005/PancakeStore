@@ -1,38 +1,38 @@
 // !$*UTF8*$!
 {
-archiveVersion = 1;
-classes = {
+	archiveVersion = 1;
+	classes = {
 	};
-objectVersion = 77;
-objects = {
+	objectVersion = 77;
+	objects = {
 
-/*开始 PBXBuildFile*/
-155F6D562F14A65C00A05FA9 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 155F6D552F14A65C00A05FA9 /* MobileCoreServices.framework */; };
-1561ED532F9F01DF008BEC23 /* MapleSyrup.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1561ED492F9F01DE008BEC23 /* MapleSyrup.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-15C990E42FA0742F00DF5AEF /* PartyUI in Frameworks */ = {isa = PBXBuildFile; productRef = 15C990E32FA0742F00DF5AEF /* PartyUI */; };
-435BB1302FD3E8300037A1BB /* PartyUI in Frameworks */ = {isa = PBXBuildFile; productRef = 435BB12F2FD3E8300037A1BB /* PartyUI */; };
-6FA2A8FF2D2426F2005CF73D /* Telegraph in Frameworks */ = {isa = PBXBuildFile; productRef = 6FA2A8FE2D2426F2005CF73D /* Telegraph */; };
-6FA2A9022D2426F9005CF73D /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = 6FA2A9012D2426F9005CF73D /* Zip */; };
-/*结束 PBXBuildFile*/
+/* Begin PBXBuildFile section */
+		155F6D562F14A65C00A05FA9 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 155F6D552F14A65C00A05FA9 /* MobileCoreServices.framework */; };
+		1561ED532F9F01DF008BEC23 /* MapleSyrup.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1561ED492F9F01DE008BEC23 /* MapleSyrup.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		15C990E42FA0742F00DF5AEF /* PartyUI in Frameworks */ = {isa = PBXBuildFile; productRef = 15C990E32FA0742F00DF5AEF /* PartyUI */; };
+		435BB1302FD3E8300037A1BB /* PartyUI in Frameworks */ = {isa = PBXBuildFile; productRef = 435BB12F2FD3E8300037A1BB /* PartyUI */; };
+		6FA2A8FF2D2426F2005CF73D /* Telegraph in Frameworks */ = {isa = PBXBuildFile; productRef = 6FA2A8FE2D2426F2005CF73D /* Telegraph */; };
+		6FA2A9022D2426F9005CF73D /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = 6FA2A9012D2426F9005CF73D /* Zip */; };
+/* End PBXBuildFile section */
 
-/*开始 PBXContainerItemProxy you*/
-1561ED512F9F01DF008BEC23 /* PBXContainerItemProxy */ = {
-isa = PBXContainerItemProxy;
-containerPortal=6 FA 2 A 8 E 02 D 24268 F 005 CF73 D/*项目对象*/；
-proxyType = 1;
-remoteGlobalIDString = 1561ED482F9F01DE008BEC23;
-remoteInfo = MapleSyrup;
+/* Begin PBXContainerItemProxy section */
+		1561ED512F9F01DF008BEC23 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6FA2A8E02D24268F005CF73D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1561ED482F9F01DE008BEC23;
+			remoteInfo = MapleSyrup;
 		};
-/*结束 PBXContainerItemProxy you*/
+/* End PBXContainerItemProxy section */
 
-/*开始 pbxcopylesbuildphase*/
-1561ECF 52F 9 EF4 D 8008 BEC23/*嵌入基础扩展*/={
-isa = PBXCopyFilesBuildPhase;
-buildActionMask = 2147483647;
-dstPath = "";
-dstSubfolderSpec = 13;
-文件=
-1561ED532F9F01DF008BEC23 /* MapleSyrup.appex in Embed Foundation Extensions */,
+/* Begin PBXCopyFilesBuildPhase section */
+		1561ECF52F9EF4D8008BEC23 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				1561ED532F9F01DF008BEC23 /* MapleSyrup.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -195,10 +195,10 @@ dstSubfolderSpec = 13;
 				};
 			};
 			buildConfigurationList = 6FA2A8E32D24268F005CF73D /* Build configuration list for PBXProject "PancakeStore" */;
-			developmentRegion = zh-Hans;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				zh-Hans,
+				en,
 				Base,
 			);
 			mainGroup = 6FA2A8DF2D24268F005CF73D;
