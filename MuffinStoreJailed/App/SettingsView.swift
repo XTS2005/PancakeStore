@@ -74,6 +74,7 @@ struct SettingsView: View {
                     LinkCreditCell(image: Image("mineek"), name: "mineek", description: "MuffinStore Jailed 的原作者。", url: "https://github.com/mineek")
                     LinkCreditCell(image: Image("lunginspector"), name: "lunginspector", description: "界面改进和体验优化。", url: "https://github.com/lunginspector")
                     LinkCreditCell(image: Image("skadz"), name: "Skadz", description: "两次修复了整个认证系统。", url: "https://github.com/skadz108")
+                    LinkCreditCell(image: Image("floatingdreamer"), name: "浮梦往事", description: "完成了应用汉化。", url: "http://www.coolapk.com/u/30819340")
                 }
             }
             .navigationTitle("设置")
