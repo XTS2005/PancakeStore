@@ -30,6 +30,8 @@ jobs:
       - name: build
         run: |
           chmod +x ipabuild.sh
+          # 修改脚本，在 xcodebuild 命令中插入 -arch arm64
+          sed -i '' 's/xcodebuild -project/xcodebuild -arch arm64 -project/g' ipabuild.sh
           ./ipabuild.sh
 
       - name: 列出生成的文件
