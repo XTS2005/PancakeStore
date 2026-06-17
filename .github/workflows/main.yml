@@ -27,6 +27,21 @@ jobs:
       - name: install ldid
         run: brew install ldid
 
+      - name: 诊断项目文件
+        run: |
+          echo "=== 检查项目文件 ==="
+          ls -la PancakeStore.xcodeproj/
+          echo ""
+          echo "=== 检查 project.pbxproj 前几行 ==="
+          head -20 PancakeStore.xcodeproj/project.pbxproj
+          echo ""
+          echo "=== 检查是否有合并冲突 ==="
+          grep -n "<<<<<<<" PancakeStore.xcodeproj/project.pbxproj || echo "没有发现合并冲突标记"
+          grep -n ">>>>>>>" PancakeStore.xcodeproj/project.pbxproj || echo "没有发现合并冲突标记"
+          echo ""
+          echo "=== 验证 JSON 格式 ==="
+          plutil -lint PancakeStore.xcodeproj/project.pbxproj || echo "项目文件格式有问题"
+
       - name: build
         run: |
           chmod +x ipabuild.sh
