@@ -27,38 +27,6 @@ jobs:
       - name: install ldid
         run: brew install ldid
 
-      - name: 修复项目文件编码
-        run: |
-          echo "=== 修复项目文件 ==="
-          cd PancakeStore.xcodeproj
-          
-          # 备份原文件
-          cp project.pbxproj project.pbxproj.bak
-          
-          # 移除 BOM 头和修复编码
-          # 使用 sed 移除可能存在的 BOM 并确保正确换行
-          sed -i '' '1s/^[[:space:]]*//' project.pbxproj
-          
-          # 使用 plutil 转换格式（从 OpenStep 到 XML，再转回）
-          echo "转换为 XML 格式..."
-          plutil -convert xml1 project.pbxproj
-          
-          echo "转换回 OpenStep 格式..."
-          plutil -convert binary1 project.pbxproj
-          plutil -convert xml1 project.pbxproj
-          
-          # 验证
-          echo "=== 验证项目文件 ==="
-          plutil -lint project.pbxproj
-          if [ $? -eq 0 ]; then
-            echo "✅ 项目文件修复成功"
-          else
-            echo "❌ 项目文件仍然有问题"
-            exit 1
-          fi
-          
-          cd ..
-
       - name: build
         run: |
           chmod +x ipabuild.sh
