@@ -8,13 +8,32 @@ on:
 jobs:
   build:
     runs-on: macos-15
+    
     steps:
      - uses: actions/checkout@v3
-     - name: Compile
-       run: make
      
-     - name: Upload artifact
+     - name: 设置脚本执行权限
+       run: chmod +x ipabuild.sh
+     
+     - name: 缓存 DerivedData
+       uses: actions/cache@v3
+       with:
+        path: ~/Library/Developer/Xcode/DerivedData
+        key: ${{ runner.os }}-deriveddata-${{ hashFiles('PancakeStore.xcodeproj/project.pbxproj') }}
+        restore-keys: |
+          ${{ runner.os }}-deriveddata-
+     
+     - name: 编译 IPA
+       run: ./ipabuild.sh --debug
+     
+     - name: 列出生成的文件 (调试)
+       run: ls -la *.ipa || echo "No IPA files found"
+     
+     - name: 上传 IPA
        uses: actions/upload-artifact@v4
        with:
-        name: MuffinStoreJailed
-        path: MuffinStoreJailed.ipa
+        name: PancakeStore
+        path: |
+          PancakeStore.ipa
+          PancakeStore.debug.ipa
+        if-no-files-found: error
