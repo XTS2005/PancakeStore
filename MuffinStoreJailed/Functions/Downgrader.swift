@@ -72,7 +72,7 @@ func downgradeAppToVersion(appId: String, versionId: String, ipaTool: IPATool) {
         server.route(.GET, "install", { _ in
             print("Serving install page")
             appData.hasAppBeenServed = true
-            appData.applicationStatus = "Downgrade successful!"
+            appData.applicationStatus = "降级成功！"
             appData.applicationIcon = "checkmark.circle.fill"
             appData.applicationIconColor = .green
             let installPage = """
@@ -114,19 +114,19 @@ func downgradeAppToVersion(appId: String, versionId: String, ipaTool: IPATool) {
 
 func promptForVersionId(appId: String, versionIds: [String], ipaTool: IPATool) {
     let isiPad = UIDevice.current.userInterfaceIdiom == .pad
-    let alert = UIAlertController(title: "Enter version ID", message: "Select a version to downgrade to", preferredStyle: isiPad ? .alert : .actionSheet)
+    let alert = UIAlertController(title: "输入版本ID", message: "选择要降级到的版本", preferredStyle: isiPad ? .alert : .actionSheet)
     for versionId in versionIds {
         alert.addAction(UIAlertAction(title: versionId, style: .default, handler: { _ in
             downgradeAppToVersion(appId: appId, versionId: versionId, ipaTool: ipaTool)
         }))
     }
-    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+    alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
     UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
 }
 
 func showAlert(title: String, message: String) {
     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+    alert.addAction(UIAlertAction(title: "确定", style: .default, handler: nil))
     UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
 }
 
@@ -137,7 +137,7 @@ func getAllAppVersionIdsFromServer(appId: String, ipaTool: IPATool) {
     let task = URLSession.shared.dataTask(with: request) { data, response, error in
         if let error = error {
             DispatchQueue.main.async {
-                showAlert(title: "Error", message: error.localizedDescription)
+                showAlert(title: "错误", message: error.localizedDescription)
             }
             return
         }
@@ -145,19 +145,19 @@ func getAllAppVersionIdsFromServer(appId: String, ipaTool: IPATool) {
         let versionIds = json["data"] as! [Dictionary<String, Any>]
         if versionIds.count == 0 {
             DispatchQueue.main.async {
-                showAlert(title: "Error", message: "No version IDs, internal error maybe?")
+                showAlert(title: "错误", message: "没有版本ID，可能是内部错误？")
             }
             return
         }
         DispatchQueue.main.async {
             let isiPad = UIDevice.current.userInterfaceIdiom == .pad
-            let alert = UIAlertController(title: "Select a version", message: "Select a version to downgrade to", preferredStyle: isiPad ? .alert : .actionSheet)
+            let alert = UIAlertController(title: "选择版本", message: "选择要降级到的版本", preferredStyle: isiPad ? .alert : .actionSheet)
             for versionId in versionIds {
                 alert.addAction(UIAlertAction(title: "\(versionId["bundle_version"]!)", style: .default, handler: { _ in
                     downgradeAppToVersion(appId: appId, versionId: "\(versionId["external_identifier"]!)", ipaTool: ipaTool)
                 }))
             }
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
             UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
         }
     }
@@ -171,10 +171,10 @@ func downgradeApp(appId: String, ipaTool: IPATool) {
     if versionIds.isEmpty {
         print("No version ids were found, aborting...")
         DispatchQueue.main.async {
-            Alertinator.shared.alert(title: "Failed to downgrade app!", body: "Failed to get available version ids. This may be because the app has not been purchased yet, or there are no versions available to downgrade to.")
+            Alertinator.shared.alert(title: "应用降级失败！", body: "获取可用版本ID失败。这可能是因为该应用尚未购买，或者没有可降级的版本。")
             appData.isDowngrading = false
             appData.appLink = ""
-            appData.applicationStatus = "Ready to Downgrade!"
+            appData.applicationStatus = "准备降级！"
             appData.applicationIcon = "checkmark.circle.fill"
         }
         return
@@ -182,14 +182,14 @@ func downgradeApp(appId: String, ipaTool: IPATool) {
     
     let isiPad = UIDevice.current.userInterfaceIdiom == .pad
     
-    let alert = UIAlertController(title: "Version ID", message: "Do you want to enter the version ID manually or request the list of version IDs from the server?", preferredStyle: isiPad ? .alert : .actionSheet)
-    alert.addAction(UIAlertAction(title: "Manual", style: .default, handler: { _ in
+    let alert = UIAlertController(title: "版本ID", message: "您想手动输入版本ID还是从服务器请求版本ID列表？", preferredStyle: isiPad ? .alert : .actionSheet)
+    alert.addAction(UIAlertAction(title: "手动", style: .default, handler: { _ in
         promptForVersionId(appId: appId, versionIds: versionIds, ipaTool: ipaTool)
     }))
-    alert.addAction(UIAlertAction(title: "Server", style: .default, handler: { _ in
+    alert.addAction(UIAlertAction(title: "服务器", style: .default, handler: { _ in
         getAllAppVersionIdsFromServer(appId: appId, ipaTool: ipaTool)
     }))
-    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+    alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
     UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
 }
 

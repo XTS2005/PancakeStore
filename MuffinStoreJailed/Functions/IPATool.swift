@@ -242,7 +242,7 @@ class StoreClient {
                             } else {
                                 print("authentication failed: \(resp["customerMessage"] as! String)")
                                 DispatchQueue.main.async {
-                                    Alertinator.shared.alert(title: "Failed to log in!", body: "Make sure that your Apple ID and password are correct, and then try again.\n\nError: \(resp["customerMessage"] as! String)")
+                                    Alertinator.shared.alert(title: "登录失败！", body: "请确保您的Apple ID和密码正确，然后重试。\n\n错误：\(resp["customerMessage"] as! String)")
                                 }
                             }
                         } catch {
@@ -551,7 +551,7 @@ class EncryptedKeychainWrapper {
                 appData.appleId = ""
                 appData.password = ""
                 appData.hasSent2FACode = false
-                Alertinator.shared.alert(title: "Failed to login!", body: "Could not get the key. Please try again with a different Apple ID, preferrably one with 2FA enabled.")
+                Alertinator.shared.alert(title: "登录失败！", body: "无法获取密钥。请使用其它 Apple ID 重试，建议使用已开启双重认证的账号。")
             }
             return nil
         }
